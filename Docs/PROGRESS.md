@@ -1,7 +1,75 @@
 # Progress - Explow Project
 
-**Fecha:** 2026-05-11 05:45 UTC
-**Estado:** Git commit hecho, listo para testing de gameplay
+**Fecha:** 2026-05-13 23:50 UTC
+**Estado:** FASE 0 en progreso - Arreglando timing de inicialización
+
+---
+
+## Sesión 2026-05-13
+
+### Objetivo del Día
+Ejecutar TASK-00 a TASK-05 (Fase 0: Desbloqueo Crítico)
+
+### Lo Que Se Hizo
+
+#### TASK-01: ProjectileController.prefab ✅ (Parcial)
+- **Problema:** Sprite del prefab estaba como `fileID: 0` (null)
+- **Solución:** MCP pudo crear sprite dinámicamente via `Sprite.Create()`, pero no se persiste a disco
+- **Añadido:** CircleCollider2D con `isTrigger=true`, `radius=0.3`
+- **Layer:** Configurado a 10 (Projectile)
+- **Limitación:** Sprite se crea en runtime, Wick debería crear uno permanente en Editor
+
+#### TASK-02: QuickSetup Duplicados ✅
+- **Cambios en QuickSetup.cs:**
+  - Añadido guard contra duplicados de QuickSetup mismo
+  - Añadido `DontDestroyOnLoad(gameObject)` para persistir entre escenas
+  - Logs mejorados para indicar cuando detecta existente
+
+#### TASK-03: AI Turn Execution 🔄 (EN PROGRESO)
+- **Problema:** GameBootstrap se conectaba ANTES de que TurnManager existiera
+- **Logs del error:**
+  ```
+  [GameBootstrap] TurnManager not found after waiting!
+  [TurnManager] Player 0 turn started. Time: 20s. Phase: AIM  <- TARDÍSIMO
+  ```
+- **Solución aplicada:**
+  - `QuickSetup.Start()` → usa coroutine que espera 2 frames
+  - `GameBootstrap.OnPlaygroundReady()` → nuevo método para recibir notificación
+  - `GameBootstrap.ConnectToTurnManagerCoroutine()` → espera hasta 30 frames buscando TurnManager en fase AIM
+- **Estado:** Esperando test después de los cambios de timing
+
+### Archivos Modificados (Sesión)
+```
+Assets/_Project/Resources/Projectiles/ProjectileController.prefab  - Sprite y Collider
+Assets/_Project/Scripts/Core/TurnManager.cs                        - (sin cambios activos)
+Assets/_Project/Scripts/Tools/GameBootstrap.cs                   - Timing fix
+Assets/_Project/Scripts/Tools/PlaygroundSetup.cs                 - (sin cambios activos)
+Assets/_Project/Scripts/Tools/QuickSetup.cs                       - Duplicates fix
+```
+
+### Estado de Tasks Fase 0
+| Task | Estado | Notas |
+|------|--------|-------|
+| TASK-00 | ✅ | Verificación completada |
+| TASK-01 | ✅ | Prefab existe con sprite (limitación: no persistente) |
+| TASK-02 | ✅ | QuickSetup con guards |
+| TASK-03 | 🔄 | Timing fix aplicado, esperando test |
+| TASK-04 | ⏳ | No iniciado |
+| TASK-05 | ⏳ | No iniciado |
+
+### Problemas Conocidos
+1. **Sprite no persistente** - MCP no puede guardar assets a disco
+2. **MCP timeout** - Servidor dejó de responder temporalmente
+3. **Edit/Play no funciona via MCP** - Solo funciona presionando Play en Editor
+
+### Lo Que Falta
+- [ ] Test TASK-03: Verificar que GameBootstrap conecta correctamente
+- [ ] TASK-04: Arreglar Terrain Bounds (FillTerrainTiles)
+- [ ] TASK-05: Validación completa de Fase 0
+
+---
+
+## Sesión 2026-05-11
 
 ## Estado de Git
 - ✅ Commit inicial creado (8f5bbae)

@@ -1,5 +1,28 @@
 # Changelog - Explow Project
 
+## 2026-05-13 - Sesión Minimax Taskmaster
+
+### TASK-01: ProjectileController.prefab
+- Sprite null (`fileID: 0`) -> Creado dinámicamente via `Sprite.Create()`
+- Añadido CircleCollider2D (`isTrigger=true`, `radius=0.3`)
+- Layer configurado a 10
+- Limitación: Sprite no se persiste a disco via MCP
+
+### TASK-02: QuickSetup Duplicates
+- Añadido guard contra duplicados de QuickSetup
+- Añadido `DontDestroyOnLoad(gameObject)`
+- Logs mejorados
+
+### TASK-03: AI Turn Execution Timing
+- **Bug:** GameBootstrap.ConnectToTurnManagerCoroutine() se ejecutaba ANTES de que PlaygroundSetup creara TurnManager
+- **Solución:** 
+  - Nuevo método `GameBootstrap.OnPlaygroundReady()`
+  - `QuickSetup.Start()` ahora usa coroutine que espera 2 frames
+  - Coroutine espera hasta 30 frames buscando TurnManager en fase AIM
+- **Pendiente:** Test de validación
+
+---
+
 ## 2026-05-11 - Sesión Final (05:30 UTC)
 
 ### Consolidación Completa Lograda
